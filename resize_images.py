@@ -15,6 +15,6 @@ def resize_images(directory, scale_factor):
 
 #%%
 graphs_directory = "d:/Repos/NIBS/graphs"
-scale_factor = 0.5
+scale_factor = 0.75
 resize_images(graphs_directory, scale_factor)
 # %%
