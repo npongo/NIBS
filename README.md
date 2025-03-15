@@ -19,7 +19,7 @@ For more examples code look in the examples fold.
 ```python
 import duckdb 
 
-with duckdb.connect("https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&dl=0",readonly=True) as conn:
+with duckdb.connect("https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&raw=1",readonly=True) as conn:
     sql = ""
     df = con.execute(sql).to_df()
     con.close
