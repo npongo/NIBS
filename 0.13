@@ -1,0 +1,2 @@
+No global python version has been set yet. Please set the global version by typing:
+pyenv global 3.7.2

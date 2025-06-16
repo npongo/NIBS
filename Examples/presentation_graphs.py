@@ -1,192 +1,32 @@
 #%%
+%reload_ext autoreload
+%autoreload 2
+
+get_ipython().run_line_magic('matplotlib', 'inline')
 import sys
-import os
-sys.path.extend([r"E:\npongo Dropbox\benjamin clark\PythonProjects"])
-import numpy as np
+sys.path.extend(["..\\"])
+from Shared.NIBSData2 import *
 import math as m
 import pandas as pd
-from scipy import stats
-import itertools
-import geopandas as gpd 
-import PostDoc.db_clients.mssql_db_client as mssql  
-import PostDoc.Plotting.squarify as squarify
-import copy
-import docx 
-from docx.shared import Cm 
-from PostDoc.Plotting.PlottingFunctions import *
-from plotnine import ggplot, geom_point, aes, stat_smooth, facet_wrap, scale_color_discrete, labs
+from plotnine import ggplot, geom_point, aes, facet_wrap, scale_color_discrete, labs
 
 
-chart_dir = r"E:\npongo Dropbox\benjamin clark\CIL\Products\EDF20240913"
-if not os.path.exists(chart_dir):
-       os.makedirs(chart_dir)
+chart_dir = r"..\\Examples"
+if not path.exists(chart_dir):
+    makedirs(chart_dir)
 
 print('Python %s on %s' % (sys.version, sys.platform))
-#load india national boundary as map background
-india_sql = "SELECT geog.STAsBinary() as geog FROM [dbo].[national_boundaries]"
-india = load_map_data(db_client, india_sql)
-base_map = plot_map(None, india, None, 'base map', '')
-base_map
 
-state_sql = "select * from vwM_india_states option(maxrecursion 0)"
-india_states = load_map_data(db_client, state_sql)
-
-
-
-# db_conn = {'server': '.\\npongo22', 'database': 'india_cost_of_cultivation_ghg_results_v1'}
-# db_client = mssql.SqlServerClient(db_conn) 
-
-db_conn_input = {'server': '.\\npongo22', 'database': 'india_agriculture_census_ghg_results_v1'}
-db_client_input = mssql.SqlServerClient(db_conn_input)
-
-def format_name(c):
-
-    label = (c
-             .replace('_',' ')
-             .replace('area wt avg kg co2e ha',"Area Wt Average Kg CO$_2$e Ha$^{-1}$")
-             .replace('total emissions Gg co2e',"Total Emissions Gg CO$_2$e")
-             .replace('total emissions Tg co2e',"Total Emissions Tg CO$_2$e")
-             .replace('no','NO')
-             .replace('n2o','N$_2$O')
-             .replace('ch4','CH$_4$')
-             .replace('caco3','CaCO$_3$')
-             .replace('nh3','NH$_3$')
-             .replace('crop','organic\nfertilizer')
-             .replace('kg n production kg','N Kg Crop Kg$^{-1}$')
-             .replace('kg co2e production kg','CO$_2$ Kg Crop Kg$^{-1}$')
-             .replace('kg co2e ha','CO$_2$ Kg Ha$^{-1}$')
-             .replace('kg n ha','N Kg Ha$^{-1}$')
-             .replace('kg co2e','CO$_2$ Kg')
-             .replace('kg n','N Kg')
-             .replace('n kg','N Kg')
-             .replace('avg wt avg','')
-             .replace('co2e','CO$_2$e')
-             .replace('Co2e','CO$_2$e')
-             .replace('manure mgmt','\nmanure mgmt')
-             .replace('enteric fermentation','enteric\nfermentation')
-             )
-    label = label[0].upper() + label[1:]
-    return label
 
 colors = ['green', 'blue', 'red', 'orange', 'purple', 'violet', 'aqua']
 colors = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00',  '#cab2d6','#6a3d9a','#ffff99','#b15928']
-#%%
-bur_sql = """
-    select * from india_bur_3_emission_data
-    where sector not in('Enteric Fermentation','Manure Management')
-"""
-bur_df = load_table_data(db_client_input, bur_sql)
-print(list(bur_df['sector']))
-print({i:i for i in bur_df['sector']})  
 
-#%%
-bur_df['sector'] = pd.Categorical(bur_df['sector']
-                                    , categories=[ 'Field Burning', 'Total N2O Emissions','Rice Cultivation'], ordered=True)
-bur_df['sector'] = bur_df['sector'].cat.rename_categories({'Rice Cultivation': 'Rice\nCultivation', 'Total N2O Emissions': 'Total N2O\nEmissions', 'Field Burning': 'Field\nBurning'})
+nibs = NIBSData()
 
-bur_df.head()
-#%%
-p = (ggplot(bur_df)
-            # + geom_violin(filter_df,aes(x='dataset', y='kg_inorganic_n_ha'),draw_quantiles=[0.25, 0.5, 0.75])
-            + geom_col(aes(x='sector', y='mt_co2e_100',fill='sector'))
-            + geom_text(aes(x='sector', y='mt_co2e_100', label='mt_co2e_100'), 
-                        va='bottom', ha='center', size=8, format_string='{:.2f}')
-    
-            # + geom_jitter(filter_df, aes(x='dataset', y='kg_inorganic_n_ha'), color='blue', alpha=.01, size=.001, width=0.3)
-             + labs(title='2016 India BUR UNFCCC Emissions', x='Emission Type', y="$CO_2e_{100}\ Mt\ Year^{-1}$")
-            # + scale_y_log10()
-            + scale_y_continuous(expand=[0,0], limits=[0, 100])
-            + guides(fill=None) 
-             + theme(axis_text_x=element_text(angle=0, va="top", ha="center", size=8), plot_title=element_text(ha='center', size=14))
-       
-            )
-print(p)
-p.save(filename=f"india_bur_3_emissions.png", path=chart_dir,height=7, width=12, units='cm', dpi=92)
-# %%
-
-# %%
-national_sql = """
-select *
-from vwG_national_cropping_ghg
-where parameter not in('mean_total_eagle_2020_n2o_co2e_Mt','mean_total_co2e_Mt')
-"""
-national_df  = load_table_data(db_client_input, national_sql)
-#national_df = national_df.sort_values(by=['gwp_time_period', 'mean_co2e_Mt'], ascending=[True, True])
-national_df['label_simple'] = pd.Categorical(national_df['label_simple']
-                                 , categories=[ 'Rice $N_2O$',
-                                            'Residue Burning',
-                                            'Upland Crops $N_2O$', 
-                                            'Rice $CH_4$']
-                                            , ordered=True)
-
-national_df['gwp_time_period'] = pd.Categorical(national_df['gwp_time_period']
-                                 , categories=[ 20,
-                                            100]
-, ordered=True)
-gwp_label={20:'$GWP_{20}$', 100:'$GWP_{100}$'}
-national_df['gwp_label'] = national_df['gwp_time_period'].map(gwp_label)
-
-print({i:i for i in national_df['label_simple'].unique()})  
-
-#%%
-national_df['label_simple'] = national_df['label_simple'].cat.rename_categories({'Upland Crops $N_2O$': 'Upland\nCrops\n$N_2O$',
-                                                                                 'Rice $N_2O$': 'Rice\n$N_2O$',
-                                                                                  'Residue Burning': 'Residue\nBurning',
-                                                                                   'Rice $CH_4$': 'Rice\n$CH_4$'}
-)
-
-national_df.head()
-
-#%%
-national_df['gwp_time_period'].unique()
-
-#%%
-p = (ggplot(national_df)
-            # + geom_violin(filter_df,aes(x='dataset', y='kg_inorganic_n_ha'),draw_quantiles=[0.25, 0.5, 0.75])
-            + geom_col(aes(x='label_simple', y='mean_co2e_Mt',fill='label_simple'))
-            + geom_errorbar(aes(x='label_simple', ymin='mean_co2e_Mt - sd_co2e_Mt', ymax='mean_co2e_Mt + sd_co2e_Mt'), width=0.2)
-          + geom_text(aes(x='label_simple', y='mean_co2e_Mt', label='mean_co2e_Mt'), 
-                 va='bottom', ha='center', size=8, format_string='{:.2f}')
-    
-            # + geom_jitter(filter_df, aes(x='dataset', y='kg_inorganic_n_ha'), color='blue', alpha=.01, size=.001, width=0.3)
-             + labs(title='2016-17 Cropping GHG Emissions', x="Emission Type", y="$CO_2e\ Mt\ Year^{-1}$")
-            # + scale_y_log10()
-             +scale_y_continuous(limits=(0, 375))
-            + guides(fill=None) 
-             + theme(axis_text_x=element_text(angle=0, va="top", ha="center", size=10),
-             plot_title=element_text(ha='center', size=14))
-            + facet_wrap('~gwp_label')
-            )
-print(p)
-p.save(filename=f"national_ghg_15x18.png", path=chart_dir,height=12, width=15, units='cm', dpi=92)
-g = p + facet_wrap('~gwp_label', scales='free_y')
-print(g)
-g.save(filename=f"national_ghg_15x18_free_y.png", path=chart_dir,height=12, width=15, units='cm', dpi=92)
-
-
-# %%
-district_sql = """select district_name, geog.STAsBinary() as geog from district_boundaries"""
-district_df = load_map_data(db_client_input, district_sql)
-district_df.head()
-
-#%%
-p =  plot_map(None, district_df, None, 'base map', '')
-p
-
-# %%
-
-# %%
-district_climate_sql = """select  geog.STAsBinary() as geog from district_climate_temp"""
-district_climate_df = load_map_data(db_client_input, district_climate_sql)
-district_climate_df.head()
-
-#%%
-p =  plot_map(None, district_climate_df, None, 'base map', '')
-p
 
 # %%
 rice_wheat_sql = """select  * from vwR_rice_wheat_n_balance"""
-rice_wheat_df = load_map_data(db_client_input, rice_wheat_sql)
+rice_wheat_df = nibs.load_dataset('vwR_rice_wheat_n_balance')
 rice_wheat_df.head()
 
 #%%

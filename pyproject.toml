@@ -1,0 +1,7 @@
+[project]
+name = "nibs"
+version = "0.1.0"
+description = "python environment required to access the data for the NIBS project"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ['chardet','numpy>=2.2','ipykernel','scipy','polars','pyarrow','pandas','requests', 'geopandas','plotnine','duckdb','pillow']
