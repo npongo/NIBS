@@ -8,6 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
-Data
+
+#folders to ignore
+Data/ 
+.vs/
+
+
+
 
 
