@@ -10,7 +10,7 @@ from os import path, makedirs
 from PIL import Image
 from scipy import stats
 from scipy.stats import chi2_contingency
-from Shared.NIBSUrls import nib_urls
+from Shared.NIBSUrls import *
 import warnings
 # Suppress all warnings
 warnings.filterwarnings("ignore")
@@ -22,8 +22,8 @@ class NIBSData():
     # set these directories to the location of the data and chart directories on the local system
     # you can customize the colors for the maps as well if desired
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def __init__(self, data_dir:str=r"D:\Repos\NIBS\Data"
-                 , chart_dir:str=r"D:\Repos\NIBS\Graphs"
+    def __init__(self, data_dir:str=r"B:\Repos\NIBS\Data"
+                 , chart_dir:str=r"B:\Repos\NIBS\Graphs"
                  ,low_color:str="green"
                  ,mid_color:str="yellow"
                  ,high_color:str="red"
@@ -113,15 +113,18 @@ class NIBSData():
         """
         if "read_parquet" not in sql:
             return 
-        parquet_file_path = sql[sql.find("read_parquet"):]
-        parquet_file_path = parquet_file_path[parquet_file_path.find("('")+2:parquet_file_path.find("')")]
-        url_key = path.basename(parquet_file_path).replace('.parquet','')
-        url = nib_urls[url_key]
-        file_name = url[:url.find('?')].split('/')[-1]
-        save_path = path.join(self._data_dir, file_name)
-        if not path.exists(save_path):
-            print(f"Starting to download {file_name} from {url}")
-            self.download_file(url, save_path)
+        unions = sql.lower().split("union")
+        
+        for sql in unions:
+            parquet_file_path = sql[sql.find("read_parquet"):]
+            parquet_file_path = parquet_file_path[parquet_file_path.find("('")+2:parquet_file_path.find("')")]
+            url_key = path.basename(parquet_file_path).replace('.parquet','')
+            url = get_data_url(url_key)
+            file_name = url[:url.find('?')].split('/')[-1]
+            save_path = path.join(self._data_dir, file_name)
+            if not path.exists(save_path):
+                print(f"Starting to download {file_name} from {url}")
+                self.download_file(url, save_path)
 
     def load_dataset(self, dataset:str, crs:str="EPSG:4326",geom_column:str='geog')->pd.DataFrame:
         """
@@ -177,78 +180,6 @@ class NIBSData():
         df = self._duckdb.execute(sql).fetch_df()
         gdf = gpd.GeoDataFrame(df,geometry= gpd.GeoSeries.from_wkt(df[geom_column]),crs=crs)
         return gdf
-
-
-    # def layout_plot_grid(plots:list[ggplot], cols:int=None, rows:int=None, figsize:tuple(int,int)=(1,1))->pw.Brick:
-    #     """layout a grid of plots
-
-    #     Args:
-    #         plots (list[ggplot]):list of ggplot objects to layout
-    #         cols (int, optional): number of desired columns. Defaults to None.
-    #         rows (int, optional): number of desired rows, overiden if cols parameter provided. Defaults to None.
-    #         figsize (tuple, optional): desired figure size. Defaults to (1,1).
-
-    #     Returns:
-    #         pw.Brick: _description_
-    #     """
-    #     empty = pw.load_ggplot(ggplot(), figsize=figsize)
-    #     if cols is None and rows is None:
-    #         raise(Exception("Both cols and rows can not be None"))
-    #     if cols is None:
-    #         cols = m.ceil(float(len(plots))/rows)
-    #         rows = None
-    #     if rows is None:
-    #         rows = m.ceil(float(len(plots))/cols)
-    #     for i in range(rows):
-    #         x = None
-    #         for j in range(cols):
-    #             idx = i * cols + j
-    #             g = plots if idx < len(plots) else empty
-    #             if x is None:
-    #                 x = g
-    #             else:
-    #                 x = x|g
-    #         if y is None:
-    #             y = x
-    #         else:
-    #             y = y/x
-    #     return y
-    
-
-    #     label = c.replace('_',' ') \
-    #         .replace('no','NO') \
-    #         .replace('n2o','N$_2$O') \
-    #         .replace('ch4','CH$_4$') \
-    #         .replace('caco3','CaCO$_3$') \
-    #         .replace('nh3','NH$_3$') \
-    #         .replace('kg n production kg','N Kg Crop Kg$^{-1}$') \
-    #         .replace('kg co2e production kg','CO$_2$ Kg Crop Kg$^{-1}$') \
-    #         .replace('kg co2e ha','CO$_2$ Kg Ha$^{-1}$') \
-    #         .replace('kg n ha','N Kg Ha$^{-1}$') \
-    #         .replace('kg co2e','CO$_2$ Kg') \
-    #         .replace('kg n','N Kg') \
-    #         .replace('n kg','N Kg')
-    #     label = ' '.join([w[0].upper() + w[1:] for w in label.split(' ')])
-
-    #     unit = 'N Kg Crop Kg$^{-1}$' if c.endswith('kg_n_production_kg') else None
-    #     unit = 'Kg Crop Kg$^{-1}$' if c.endswith('kg_production_kg') else unit
-    #     unit = 'CO$_2$ Kg Crop Kg$^{-1}$' if c.endswith('kg_co2e_production_kg') else unit
-    #     unit = 'CO$_2$ Kg Ha$^{-1}$' if c.endswith('kg_co2e_ha') else unit
-    #     unit = 'N Kg Ha$^{-1}$' if c.endswith('kg_n_ha') else unit
-    #     unit = 'CO$_2$ Kg' if c.endswith('kg_co2e') else unit
-    #     unit = 'N Kg' if c.endswith('kg_n') else unit
-    #     unit = 'N Kg' if c.endswith('n_kg') else unit
-    #     unit = 'N Kg Ha$^{-1}$' if c.endswith('n_kg_ha') else unit
-
-
-    #     low_color, high_color = ('lime', 'red') if c.endswith('production_kg') else (None,None)
-    #     low_color, high_color = ('green', 'red') if c.endswith('ha') else (low_color, high_color)
-    #     low_color, high_color = ('#31a354', '#b30000') if c.endswith('kg') else (low_color, high_color)
-    #     low_color, high_color = ('#31a354', '#b30000') if c.endswith('kg_n') else (low_color, high_color)
-    #     low_color, high_color = ('green', 'red') if c.endswith('kg_co2e') else (low_color, high_color)
-
-    #     # '#31a354','#c2e699','#fef0d9','#fc8d59','#b30000'
-    #     return {'label': label, 'units': unit, 'low_color': low_color, 'high_color': high_color}
 
 
     def download_file(self, url:str, save_path:str)->None:
@@ -355,7 +286,8 @@ class NIBSData():
         return india
 
 
-    def percentile_map(self, data:gpd.GeoDataFrame, variable:str, title:str, units:str, file_name:str
+    def percentile_map(self, data:gpd.GeoDataFrame, variable:str, title:str, units:str
+                       , file_name:str
                        , chart_dir:str=None
                        , precentiles:list[float] = [.4, .7, .9, 1]
                        , round:int=0
@@ -365,7 +297,8 @@ class NIBSData():
                        , title_size:int=22
                        , india_poly:gpd.GeoDataFrame=None
                        , india_states_lines:gpd.GeoDataFrame=None
-                       , dpi:int=None)->ggplot:
+                       , dpi:int=None
+                       ,format=None)->ggplot:
         """Map a continuouse variable colorized by percentile breaks in the mapped variable. Use to map per hectare and total emissoins for the
         different models and gases.
 
@@ -401,6 +334,8 @@ class NIBSData():
                 india_poly = self.get_india()
             if dpi is None:
                 dpi = self._dpi
+            if format is None:
+                format = file_name.split('.')[-1]
 
             data[f'{variable}_p_score'] = data[variable].rank(pct=True)
             breaks =  data[variable].quantile(precentiles).round(round)
@@ -409,7 +344,7 @@ class NIBSData():
                 raise Exception(f"Duplicate breaks found:>{breaks}")
             
             g = (ggplot(data)
-                + geom_map(india_poly, fill='grey', color=None, show_legend=False)
+                + geom_map(india_poly, fill='grey', color='black', show_legend=False)
                 + scale_x_continuous(limits=(67.5,97.5))
                 + scale_y_continuous(limits=(7.5,37.5))
                 + coord_cartesian()
@@ -428,7 +363,7 @@ class NIBSData():
                     , legend_position=legend_position
                 )
             )
-            g.save(filename=file_name, path=chart_dir,  units='cm', dpi=dpi)
+            g.save(filename=file_name, format=format, path=chart_dir,  units='cm', dpi=dpi)
             return g
         except Exception as e:
             print(f"{e}\ncolors:{len(colors)} breaks:{len([0]+list(breaks))}, percentiles:{len(precentiles)}\ncolors:{colors} breaks:{breaks}, percentiles:{precentiles}")
@@ -477,7 +412,7 @@ class NIBSData():
             dpi = self._dpi
 
         g = (ggplot(data)
-            + geom_map(india_poly, fill='grey', color=None, show_legend=False)
+            + geom_map(india_poly, fill='grey', color="black", show_legend=False)
             + scale_x_continuous(limits=(67.5,97.5))
             + scale_y_continuous(limits=(7.5,37.5))
             + coord_cartesian()
@@ -506,7 +441,7 @@ class NIBSData():
                                , variable:str, title:str
                                , legend_name:str
                                , colors:dict[str:str]
-                               ,  file_name:str
+                               , file_name:str
                                , chart_dir:str=None
                                , legend_position:tuple[float,float]=(.65,.18)
                                , figure_size:tuple[float,float]=(7,8)
@@ -541,9 +476,9 @@ class NIBSData():
             india_poly = self.get_india()
         if dpi is None:
             dpi = self._dpi
-
         if colors is None: 
             colors = self._colors
+            
         g = (ggplot(data)
             + geom_map(india_poly, fill='grey', color=None, show_legend=False)
             + scale_x_continuous(limits=(67.5,97.5))
@@ -564,7 +499,7 @@ class NIBSData():
                 , legend_position=legend_position
             )
         )
-        g.save(filename=file_name, path=chart_dir,  units='cm', dpi=dpi)
+        g.save(filename=file_name, path=chart_dir, dpi=dpi)
         return g
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -2,13 +2,13 @@
 #%%
 %reload_ext autoreload
 %autoreload 2
+%matplotlib inline
 
-get_ipython().run_line_magic('matplotlib', 'inline')
 import sys
 sys.path.extend(["..\\"])
 from Shared.NIBSData2 import *
 from plotnine import labs
-import patchworklib as pw
+#import patchworklib as pw
 from os import path
 import warnings
 # Suppress all warnings
@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore")
 
 print('Python %s on %s' % (sys.version, sys.platform))
 
-nibs = NIBSData(data_dir=r"D:\Repos\NIBS\Data" , chart_dir=r"D:\Repos\NIBS\Graphs")
+nibs = NIBSData(data_dir=r"B:\Repos\NIBS\Data" , chart_dir=r"B:\Repos\NIBS\Graphs")
 
 #%%
 dfs = []
@@ -48,21 +48,22 @@ crop_colors = {
     'Sugarcane': 'darkred',  
     'Other Crops': 'Brown',  
 }
-graphs = {}
+crops_graphs = {}
 for (ref, df) in dfs:
     title = f'Crop with largest \ntotal $N_2O$ emissions\n({refs[ref]})'
-    file_name = f"map_district_n2o_apy_crop_max_t_{ref}.png"
+    file_name = f"map_district_n2o_apy_crop_max_t_{ref}.svg"
     g_t = nibs.manual_catagorical_map(df
                         , 'max_fert_induced_Tg_n2o_n_apy_crop'
                         ,  title
                         , 'Crop'
                         , crop_colors
                         , file_name= file_name
-                        , legend_position=(.7,.1))
+                        , legend_position=(.7,.1)
+                        ,dpi=nibs.dpi)
     g_t.show()
 
     title = f'Crop with largest $N_2O$\nemissions per hectare\n({refs[ref]})'
-    file_name = f"map_district_n2o_apy_crop_max_ha_{ref}.png"
+    file_name = f"map_district_n2o_apy_crop_max_ha_{ref}.svg"
     g_ha = nibs.manual_catagorical_map(df
                         , 'max_fert_induced_kg_n2o_n_ha_apy_crop'
                         ,  title
@@ -71,77 +72,29 @@ for (ref, df) in dfs:
                         , file_name= file_name
                         , legend_position=(.7,.1))
     g_ha.show()
-    graphs[ref] = (g_t, g_ha)
+    crops_graphs[ref] = (g_t, g_ha)
 
 # %%
-gA = pw.load_ggplot(graphs['bhatia_2013'][1] + labs(title='A')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
-gB = pw.load_ggplot(graphs['ipcc_2019'][1] + labs(title='B')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
-gC = pw.load_ggplot(graphs['eagle_2020'][1] + labs(title='C')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
-gD = pw.load_ggplot(graphs['shcherbak_2014'][1] + labs(title='D')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
+gA = crops_graphs['bhatia_2013'][1] + labs(title='\n     A')  + theme( plot_title= element_text(ha='left', size=32))
 
-gE = pw.load_ggplot(graphs['bhatia_2013'][0] + labs(title='E')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
-gF = pw.load_ggplot(graphs['ipcc_2019'][0] + labs(title='F') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
-gG = pw.load_ggplot(graphs['eagle_2020'][0] + labs(title='G')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
-gH = pw.load_ggplot(graphs['shcherbak_2014'][0] + labs(title='H')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=100
-                        , legend_key_width=25)
-                        )
+gB = crops_graphs['ipcc_2019'][1] + labs(title='\n     B') + theme( plot_title= element_text(ha='left', size=32))
 
-g = (gA| gB| gC| gD)/(gE| gF| gG| gH)
-g.savefig(path.join(nibs.chart_dir,"map_district_n2o_apy_crop_max_plate.png"), dpi=nibs.dpi)
+gC = crops_graphs['eagle_2020'][1] + labs(title='\n     C') + theme( plot_title= element_text(ha='left', size=32))
+
+gD = crops_graphs['shcherbak_2014'][1] + labs(title='\n     D') + theme( plot_title= element_text(ha='left', size=32))
+
+gE = crops_graphs['bhatia_2013'][0] + labs(title='     E') + theme( plot_title= element_text(ha='left', size=32))
+
+gF = crops_graphs['ipcc_2019'][0] + labs(title='     F') + theme( plot_title= element_text(ha='left', size=32))
+
+gG = crops_graphs['eagle_2020'][0] + labs(title='     G') + theme( plot_title= element_text(ha='left', size=32))
+
+gH = crops_graphs['shcherbak_2014'][0] + labs(title='     H') + theme( plot_title= element_text(ha='left', size=32))
+
+
+#%%
+g = (gA| gB| gC| gD)/(gE| gF| gG| gH) + theme(figure_size=(32, 16))
+g.save(path.join(nibs.chart_dir,"map_district_n2o_apy_crop_max_plate.svg"), dpi=nibs.dpi)
 g
 
 
@@ -166,21 +119,21 @@ cramer_v_df = nibs.load_map_data(cramer_v_sql)
 
 #%%
 
-ha_cramer_v = nibs.cramers_v_plot(cramer_v_df
-                    , "apy_crop_kg_ha_cramers_v_heatmap.png"
+crop_ha_cramer_v = nibs.cramers_v_plot(cramer_v_df
+                    , "apy_crop_kg_ha_cramers_v_matrix.svg"
                     , rename_ha_dict
                     , 'District crops with\nhighest $N_2O$ emission\n($Kg\ N_2O\ Ha^{-1}$ Cramér\'s V)'
                     , figure_size=(7,6)
                     ,legend_title="Cramér\'s V"
                     )
-ha_cramer_v.show()
+crop_ha_cramer_v.show()
 
-t_cramer_v = nibs.cramers_v_plot(cramer_v_df
-                    , "apy_crop_t_n2o_cramers_v_heatmap.png"
+crop_t_cramer_v = nibs.cramers_v_plot(cramer_v_df
+                    , "apy_crop_t_n2o_cramers_v_matrix.svg"
                     , rename_total_dict
                     , 'District crops with\nhighest $N_2O$ emission\n ($Total\ Gg\ N_2O$ Cramér\'s V)'
                     , figure_size=(7,6)
                     , legend_title="Cramér\'s V"
                     )
-t_cramer_v.show()                                                               
+crop_t_cramer_v.show()                                                               
 # %%

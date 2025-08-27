@@ -301,4 +301,25 @@ nib_urls = {'animal_manure_district_animal_class_wts':'https://www.dropbox.com/s
 'shareable_links':'https://www.dropbox.com/scl/fi/hv9lfosdeaa0o1hfx3x6a/shareable_links.parquet?rlkey=wcq0fzwz31ci1q9i11xj3kpow&dl=1',
 'vwM_india_states':'https://www.dropbox.com/scl/fi/9r8ulaqp6vs6fsf4m6nj0/vwM_india_states.parquet?rlkey=1s14epati5c90xcww70ytv1nr&dl=1',
 'vwG_National_co2e_summmary_all_gases_all_models_long':'https://www.dropbox.com/scl/fi/xoctca71rwsnzlts90saf/vwG_National_co2e_summmary_all_gases_all_models_long.parquet?rlkey=tt1s7ss3lrh16kkl2kzzwn0jq&dl=1',
+'crop_proportion_by_farm_size': 'https://www.dropbox.com/scl/fi/ccyvuh8hsxvil8iokrbig/crop_proportion_by_farm_size.parquet?rlkey=os45nicrm3uoa5bo7d23f3jo1&dl=1'
 }
+
+def get_data_url(key:str) -> str:
+    """Get the shareable dropbox link for a given dataset key.
+
+    Args:
+        key (str): The key corresponding to the desired dataset.
+
+    Returns:
+        str: The shareable dropbox link for the dataset.
+
+    Raises:
+        ValueError: If the provided key does not exist in the dataset dictionary.
+    """
+    
+    ci_keys = {k.lower():k for k in nib_urls}
+    if key.lower() in ci_keys:
+        url_key = ci_keys[key.lower()]
+        return nib_urls[url_key]
+    else:
+        raise ValueError(f"Key '{key}' not found in data URLs.")

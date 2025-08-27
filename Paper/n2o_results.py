@@ -1,15 +1,15 @@
 #%%
 %reload_ext autoreload
 %autoreload 2
+%matplotlib inline
 
-get_ipython().run_line_magic('matplotlib', 'inline')
 import sys
 sys.path.extend(["..\\"])
 import math as m
 import pandas as pd
 from Shared.NIBSData2 import *
 from plotnine import ggplot, aes, labs
-import patchworklib as pw
+# import patchworklib as pw
 from os import path
 import warnings
 # Suppress all warnings
@@ -17,7 +17,8 @@ warnings.filterwarnings("ignore")
 
 print('Python %s on %s' % (sys.version, sys.platform))
 
-nibs = NIBSData(data_dir=r"D:\Repos\NIBS\Data" , chart_dir=r"D:\Repos\NIBS\Graphs")
+nibs = NIBSData(data_dir=r"b:\Repos\NIBS\Data" , 
+                chart_dir=r"b:\Repos\NIBS\Graphs")
 
 rice_refs = {'shcherbak_2014': ('Shcherbak et al., 2014','direct_Gg_co2e_map', 'direct_kg_n2o_co2e_ha')
         , 'ipcc_2019': ('IPCC 2019 Updated Methodology','direct_Gg_co2e_map', 'fert_kg_n2o_co2e_ha')
@@ -45,7 +46,7 @@ for ref in upland_refs.keys():
 #%%
 upland_graphs = {}
 for ref, df in upland_dfs:
-  file_name = f"map_non_rice_total_n2o_emissions_Gg_{ref}.png"
+  file_name = f"map_non_rice_total_n2o_emissions_Gg_{ref}.svg"
   variable = upland_refs[ref][1]
   title = f'Total non-rice $N_2O$\nfertilizer induced emissions\n({upland_refs[ref][0]})'
   g_t =  nibs.percentile_map(df
@@ -55,7 +56,7 @@ for ref, df in upland_dfs:
                , file_name
                , legend_position = (.75,.1))
    
-  file_name = f"map_non_rice_ch4_emissions_kg_ha_{ref}.png"
+  file_name = f"map_non_rice_ch4_emissions_kg_ha_{ref}.svg"
   variable = upland_refs[ref][2]
   title = f"Per hectare non-rice $N_2O$\nfertilizer induced emissions\n({upland_refs[ref][0]})"
   g_ha =  nibs.percentile_map(df
@@ -72,65 +73,32 @@ for ref, df in upland_dfs:
 
 # %%
 
-gA = pw.load_ggplot(upland_graphs['bhatia_2013'][1] + labs(title='A')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gB = pw.load_ggplot(upland_graphs['eagle_2020'][1] + labs(title='B') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gC = pw.load_ggplot(upland_graphs['ipcc_2019'][1] + labs(title='C') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gD = pw.load_ggplot(upland_graphs['shcherbak_2014'][1] + labs(title='D')
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-
-gE = pw.load_ggplot(upland_graphs['bhatia_2013'][0] + labs(title='E') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gF = pw.load_ggplot(upland_graphs['eagle_2020'][0] + labs(title='F') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gG = pw.load_ggplot(upland_graphs['ipcc_2019'][0] + labs(title='G')
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gH = pw.load_ggplot(upland_graphs['shcherbak_2014'][0] + labs(title='H')
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-g = (gA| gB| gC| gD)/(gE| gF| gG| gH)
-g.savefig(path.join(nibs.chart_dir,"map_district_n2o_upland_crop_ha_Gg_plate.png"), dpi=nibs.dpi)
+gA = (upland_graphs['bhatia_2013'][1] + labs(title='\n     A')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gB = (upland_graphs['eagle_2020'][1] + labs(title='\n     B')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gC = (upland_graphs['ipcc_2019'][1] + labs(title='\n     C')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gD = (upland_graphs['shcherbak_2014'][1] + labs(title='\n     D') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gE = (upland_graphs['bhatia_2013'][0] + labs(title='     E')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gF = (upland_graphs['eagle_2020'][0] + labs(title='     F')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gG = (upland_graphs['ipcc_2019'][0] + labs(title='     G') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gH = (upland_graphs['shcherbak_2014'][0] + labs(title='     H') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+g = (gA| gB| gC| gD)/(gE| gF| gG| gH) + theme(figure_size=(32, 16))
+g.save(path.join(nibs.chart_dir,"map_district_n2o_upland_crop_ha_Gg_plate.svg"), dpi=nibs.dpi)
 g
 
 
@@ -148,7 +116,7 @@ for ref in rice_refs.keys():
 #%%
 rice_graphs = {}
 for ref, df in rice_dfs:
-  file_name = f"map_rice_total_n2o_emissions_Gg_{ref}.png"
+  file_name = f"map_rice_total_n2o_emissions_Gg_{ref}.svg"
   variable = rice_refs[ref][1]
   title = f'Total rice $N_2O$\nfertilizer induced emissions\n({rice_refs[ref][0]})'
   g_t =  nibs.percentile_map(df
@@ -158,7 +126,7 @@ for ref, df in rice_dfs:
                , file_name
                , legend_position = (.75,.1))
    
-  file_name = f"map_rice_ch4_emissions_kg_ha_{ref}.png"
+  file_name = f"map_rice_ch4_emissions_kg_ha_{ref}.svg"
   variable = rice_refs[ref][2]
   title = f"Per hectare rice $N_2O$\nfertilizer induced emissions\n({rice_refs[ref][0]})"
   g_ha =  nibs.percentile_map(df
@@ -174,80 +142,39 @@ for ref, df in rice_dfs:
 
 
 # %%
+gA = (rice_graphs['bhatia_2013'][0] + labs(title='\n     A') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gB = (rice_graphs['eagle_2020'][0] + labs(title='\n     B') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gC = (rice_graphs['ipcc_2019'][0] + labs(title='\n     C')
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gD = (rice_graphs['shcherbak_2014'][0] + labs(title='\n     D')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gE = (rice_graphs['hiroko_akiyama_2005'][0] + labs(title='\n     E') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gF = (rice_graphs['bhatia_2013'][1]+ labs(title='     F')  
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gG = (rice_graphs['eagle_2020'][1] + labs(title='     G') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gH = (rice_graphs['ipcc_2019'][1] + labs(title='     H') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        ) 
+gI = (rice_graphs['shcherbak_2014'][1] + labs(title='     I') 
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
+gJ = (rice_graphs['hiroko_akiyama_2005'][1] + labs(title='     J')
+                + theme( plot_title= element_text(ha='left', size=32))
+                        )
 
-gA = pw.load_ggplot(rice_graphs['bhatia_2013'][0] + labs(title='A') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gB = pw.load_ggplot(rice_graphs['eagle_2020'][0] + labs(title='B') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gC = pw.load_ggplot(rice_graphs['ipcc_2019'][0] + labs(title='C') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gD = pw.load_ggplot(rice_graphs['shcherbak_2014'][0] + labs(title='D')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gE = pw.load_ggplot(rice_graphs['hiroko_akiyama_2005'][0] + labs(title='E')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gF = pw.load_ggplot(rice_graphs['bhatia_2013'][1]+ labs(title='F')  
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gG = pw.load_ggplot(rice_graphs['eagle_2020'][1] + labs(title='G') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gH = pw.load_ggplot(rice_graphs['ipcc_2019'][1] + labs(title='H') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gI = pw.load_ggplot(rice_graphs['shcherbak_2014'][1] + labs(title='I') 
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-gJ = pw.load_ggplot(rice_graphs['hiroko_akiyama_2005'][1] + labs(title='J')
-                + theme(plot_title=element_text(ha='left', size=32) 
-                        , legend_text_colorbar=element_text(size=18)
-                        , legend_title=element_text(size=22)
-                        , legend_position=(.7,.16)
-                        , legend_key_height=400
-                        , legend_key_width=75))
-
-g = (gA| gB| gC| gD| gE)/(gF| gG| gH| gI| gJ)
-g.savefig(path.join(nibs.chart_dir,"map_district_n2o_rice_ha_Gg_plate.png"), dpi=nibs.dpi)
+g = (gA| gB| gC| gD| gE)/(gF| gG| gH| gI| gJ) + theme(figure_size=(40, 16))
+g.save(path.join(nibs.chart_dir,"map_district_n2o_rice_ha_Gg_plate.svg"), dpi=nibs.dpi)
 g
 
 
@@ -269,7 +196,7 @@ upland_ha_rename_dict = {'kg_n2o_co2e_ha__shcherbak_2014': 'Shcherbak\net al., 2
         }
 
 upland_ha_spearman_corr_plot = nibs.spearman_plot(upland_corr_df
-              , 'district_upland_crop_kg_n2o_co2e_ha_spearman_matrix.png'
+              , 'district_upland_crop_kg_n2o_co2e_ha_spearman_matrix.svg'
               , upland_ha_rename_dict
               , 'None-rice District Model Comparison\n(Spearman Correlation $Kg\ N_2O\ Ha^{-1}$)'
               , 12
@@ -285,7 +212,7 @@ upland_t_rename_dict = {'total_Gg_co2e_map__shcherbak_2014': 'Shcherbak\net al.,
         }
 
 upland_t_spearman_corr_plot = nibs.spearman_plot(upland_corr_df
-              , 'district_upland_crop_n2o_Gg_co2e_spearman_matrix.png'
+              , 'district_upland_crop_n2o_Gg_co2e_spearman_matrix.svg'
               , upland_t_rename_dict
               , 'None-rice District Model Comparison\n(Spearman Correlation $Gg\ N_2O$)'
               , 12
@@ -311,7 +238,7 @@ rice_ha_rename_dict = {'kg_n2o_co2e_ha__shcherbak_2014': 'Shcherbak\net al., 201
 
 
 rice_ha_spearman_corr_plot = nibs.spearman_plot(rice_corr_df
-              , 'district_rice_crop_kg_n2o_co2e_ha_spearman_matrix.png'
+              , 'district_rice_crop_kg_n2o_co2e_ha_spearman_matrix.svg'
               , rice_ha_rename_dict
               , 'Rice District Model Comparison\n(Spearman Correlation $Kg\ N_2O\ Ha^{-1}$)'
               , 12
@@ -330,7 +257,7 @@ rice_t_rename_dict = {'total_Gg_co2e_map__shcherbak_2014': 'Shcherbak\net al., 2
         }
 
 rice_t_spearman_corr_plot = nibs.spearman_plot(rice_corr_df
-              , 'district_rice_crop_n2o_Gg_co2e_spearman_matrix.png'
+              , 'district_rice_crop_n2o_Gg_co2e_spearman_matrix.svg'
               , rice_t_rename_dict
               , 'Rice District Model Comparison\n(Spearman Correlation $Gg\ N_2O$)'
               , 12
@@ -375,10 +302,10 @@ def x_lab(s):
   return [model_name_dic[x] for x in s]
 
 #%%
-g = (ggplot(national_summary_df)
+national_facet_g = (ggplot(national_summary_df)
       + geom_bar(aes(x='model_ref', y='value', fill='gas'), stat='identity', width=.8)
       + geom_errorbar(aes(x='model_ref', ymin='value - sd', ymax='value + sd'), width=.5)
-      + labs(title='Total Cropping Emission by Model', x="Models",y="Kg $CO_2e_{100}\ Ha^{-1}$                  Tg $CO_2e_{100}$")
+      + labs(title='Total Cropping Emission by Model', x="Models" ,y="Tg $CO_2e_{100}$                       Kg $CO_2e_{100}\ Ha^{-1}$")
       #+ scale_y_continuous(limits=(0,250))
       + scale_x_discrete(labels=x_lab)
       + scale_fill_discrete(name='Gas')
@@ -398,14 +325,14 @@ g = (ggplot(national_summary_df)
       + facet_grid('units~.', scales='free_y')
    
 )
-g.save(path.join(nibs.chart_dir, "national_all_models_all_emissions_facet.png"), dpi=nibs.dpi)
-g
+national_facet_g.save(path.join(nibs.chart_dir, "national_all_models_all_emissions_facet.svg"), dpi=nibs.dpi)
+national_facet_g
 
 
 # %%
 area_national_summary_df = national_summary_df[national_summary_df['statistic'] == 'mean']
 
-mean_g = (ggplot(area_national_summary_df)
+nat_g = (ggplot(area_national_summary_df)
       + geom_bar(aes(x='model_ref', y='value', fill='gas'), stat='identity', width=.5)
       + geom_errorbar(aes(x='model_ref', ymin='value - sd', ymax='value + sd'), width=.3)
       + labs(title='Total Cropping Emission by Model', x="Models", y="Kg $CO_2e_{100}\ Ha^{-1}$")
@@ -422,7 +349,7 @@ mean_g = (ggplot(area_national_summary_df)
    
 )
 
-mean_g.save(path.join(nibs.chart_dir, "area_national_all_models_all_emissions.png"), dpi=nibs.dpi)
+mean_g.save(path.join(nibs.chart_dir, "area_national_all_models_all_emissions.svg"), dpi=nibs.dpi)
 mean_g
 
 
@@ -477,6 +404,6 @@ ch4_g = (ggplot(national_summary_df)
       )
    
 )
-ch4_g.save(path.join(nibs.chart_dir, "national_edf_models_all_emissions.png"), dpi=nibs.dpi)
+ch4_g.save(path.join(nibs.chart_dir, "national_edf_models_all_emissions.svg"), dpi=nibs.dpi)
 ch4_g
 # %%
