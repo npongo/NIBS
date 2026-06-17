@@ -1,7 +1,7 @@
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -29,7 +29,7 @@ farm_size_area_df['percent'] = farm_size_area_df['prop']*100
 india = nibs.get_india()
 india_states = nibs.get_india_states()
 
-      
+
 #%%
 units = "Agricultural\nland <2 Ha (%)\n"
 farm_size_area_g = (ggplot(farm_size_area_df)

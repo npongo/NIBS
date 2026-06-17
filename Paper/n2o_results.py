@@ -1,7 +1,7 @@
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -46,7 +46,7 @@ for ref in upland_refs.keys():
 #%%
 upland_graphs = {}
 for ref, df in upland_dfs:
-  file_name = f"map_non_rice_total_n2o_emissions_Gg_{ref}.svg"
+  file_name = f"map_non_rice_total_n2o_emissions_Gg_{ref}.png"
   variable = upland_refs[ref][1]
   title = f'Total non-rice $N_2O$\nfertilizer induced emissions\n({upland_refs[ref][0]})'
   g_t =  nibs.percentile_map(df
@@ -56,7 +56,7 @@ for ref, df in upland_dfs:
                , file_name
                , legend_position = (.75,.1))
    
-  file_name = f"map_non_rice_ch4_emissions_kg_ha_{ref}.svg"
+  file_name = f"map_non_rice_ch4_emissions_kg_ha_{ref}.png"
   variable = upland_refs[ref][2]
   title = f"Per hectare non-rice $N_2O$\nfertilizer induced emissions\n({upland_refs[ref][0]})"
   g_ha =  nibs.percentile_map(df
@@ -98,7 +98,7 @@ gH = (upland_graphs['shcherbak_2014'][0] + labs(title='     H')
                 + theme( plot_title= element_text(ha='left', size=32))
                         )
 g = (gA| gB| gC| gD)/(gE| gF| gG| gH) + theme(figure_size=(32, 16))
-g.save(path.join(nibs.chart_dir,"map_district_n2o_upland_crop_ha_Gg_plate.svg"), dpi=nibs.dpi)
+g.save(path.join(nibs.chart_dir,"map_district_n2o_upland_crop_ha_Gg_plate.png"), dpi=nibs.dpi)
 g
 
 
@@ -116,7 +116,7 @@ for ref in rice_refs.keys():
 #%%
 rice_graphs = {}
 for ref, df in rice_dfs:
-  file_name = f"map_rice_total_n2o_emissions_Gg_{ref}.svg"
+  file_name = f"map_rice_total_n2o_emissions_Gg_{ref}.png"
   variable = rice_refs[ref][1]
   title = f'Total rice $N_2O$\nfertilizer induced emissions\n({rice_refs[ref][0]})'
   g_t =  nibs.percentile_map(df
@@ -126,7 +126,7 @@ for ref, df in rice_dfs:
                , file_name
                , legend_position = (.75,.1))
    
-  file_name = f"map_rice_ch4_emissions_kg_ha_{ref}.svg"
+  file_name = f"map_rice_ch4_emissions_kg_ha_{ref}.png"
   variable = rice_refs[ref][2]
   title = f"Per hectare rice $N_2O$\nfertilizer induced emissions\n({rice_refs[ref][0]})"
   g_ha =  nibs.percentile_map(df
@@ -174,7 +174,7 @@ gJ = (rice_graphs['hiroko_akiyama_2005'][1] + labs(title='     J')
                         )
 
 g = (gA| gB| gC| gD| gE)/(gF| gG| gH| gI| gJ) + theme(figure_size=(40, 16))
-g.save(path.join(nibs.chart_dir,"map_district_n2o_rice_ha_Gg_plate.svg"), dpi=nibs.dpi)
+g.save(path.join(nibs.chart_dir,"map_district_n2o_rice_ha_Gg_plate.png"), dpi=nibs.dpi)
 g
 
 
@@ -196,7 +196,7 @@ upland_ha_rename_dict = {'kg_n2o_co2e_ha__shcherbak_2014': 'Shcherbak\net al., 2
         }
 
 upland_ha_spearman_corr_plot = nibs.spearman_plot(upland_corr_df
-              , 'district_upland_crop_kg_n2o_co2e_ha_spearman_matrix.svg'
+              , 'district_upland_crop_kg_n2o_co2e_ha_spearman_matrix.png'
               , upland_ha_rename_dict
               , 'None-rice District Model Comparison\n(Spearman Correlation $Kg\ N_2O\ Ha^{-1}$)'
               , 12
@@ -212,7 +212,7 @@ upland_t_rename_dict = {'total_Gg_co2e_map__shcherbak_2014': 'Shcherbak\net al.,
         }
 
 upland_t_spearman_corr_plot = nibs.spearman_plot(upland_corr_df
-              , 'district_upland_crop_n2o_Gg_co2e_spearman_matrix.svg'
+              , 'district_upland_crop_n2o_Gg_co2e_spearman_matrix.png'
               , upland_t_rename_dict
               , 'None-rice District Model Comparison\n(Spearman Correlation $Gg\ N_2O$)'
               , 12
@@ -220,6 +220,13 @@ upland_t_spearman_corr_plot = nibs.spearman_plot(upland_corr_df
               )
 upland_t_spearman_corr_plot.show()
 
+# %%
+plot_a = upland_ha_spearman_corr_plot + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))       
+plot_b = upland_t_spearman_corr_plot + labs(title='\nB')  + theme( plot_title= element_text(ha='left', size=22))        
+upland_matrix_plate = plot_a | plot_b
+upland_matrix_plate = upland_matrix_plate + theme(figure_size=(14,6))
+upland_matrix_plate.save(path.join(nibs.chart_dir,"district_upland_n2o_spearman_correlation_plate.png"), dpi=300)       
+upland_matrix_plate
 
 # %%
 rice_corr_sql = f"""
@@ -238,7 +245,7 @@ rice_ha_rename_dict = {'kg_n2o_co2e_ha__shcherbak_2014': 'Shcherbak\net al., 201
 
 
 rice_ha_spearman_corr_plot = nibs.spearman_plot(rice_corr_df
-              , 'district_rice_crop_kg_n2o_co2e_ha_spearman_matrix.svg'
+              , 'district_rice_crop_kg_n2o_co2e_ha_spearman_matrix.png'
               , rice_ha_rename_dict
               , 'Rice District Model Comparison\n(Spearman Correlation $Kg\ N_2O\ Ha^{-1}$)'
               , 12
@@ -257,7 +264,7 @@ rice_t_rename_dict = {'total_Gg_co2e_map__shcherbak_2014': 'Shcherbak\net al., 2
         }
 
 rice_t_spearman_corr_plot = nibs.spearman_plot(rice_corr_df
-              , 'district_rice_crop_n2o_Gg_co2e_spearman_matrix.svg'
+              , 'district_rice_crop_n2o_Gg_co2e_spearman_matrix.png'
               , rice_t_rename_dict
               , 'Rice District Model Comparison\n(Spearman Correlation $Gg\ N_2O$)'
               , 12
@@ -266,6 +273,13 @@ rice_t_spearman_corr_plot = nibs.spearman_plot(rice_corr_df
               )
 rice_t_spearman_corr_plot.show()
 
+#%%
+plot_a = rice_ha_spearman_corr_plot + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))
+plot_b = rice_t_spearman_corr_plot + labs(title='\nB')  + theme( plot_title= element_text(ha='left', size=22))  
+rice_matrix_plate = plot_a | plot_b
+rice_matrix_plate = rice_matrix_plate + theme(figure_size=(14,6))
+rice_matrix_plate.save(path.join(nibs.chart_dir,"district_rice_n2o_spearman_correlation_plate.png"), dpi=300)
+rice_matrix_plate
 
 # %%
 national_summary_sql = f"""select *
@@ -298,8 +312,27 @@ national_summary_df['model_ref'] = pd.Categorical(national_summary_df['model_ref
 
 model_name_dic = {v[0]:v[1] for v in national_summary_df[['model_ref','model_name']].drop_duplicates().values}
 
+#update model nameing convention
+model_name_dic = {'Yan et al.,\n 2005': '$CH_{4-GAM}$',
+ 'shcherbak et al.,\n 2014 (upland crops)': '$N_2O_{NL}$-2',
+ 'Biomass Altas \n(44 crops)': '$CRB44_{BA}$',
+ 'Bhatia et al.,\n 2013 (rice)': '$N_2O_{EF}$-1',
+ 'Nikolaisen et al.,\n 2023': '$CH_{4-GAMM}$',
+ 'IPCC 2019 Updated\nMethodology (upland crops)': '$N_2O_{EF}$-2',
+ 'Akiyama et al.,\n 2005 (rice)': '$N_2O_{EF}$-3',
+ 'shcherbak et al.,\n 2014 (rice)': '$N_2O_{NL}$-2',
+ 'Bhatia et al.,\n 2013 (upland crops)': '$N_2O_{EF}$-1',
+ 'Eagle et al.,\n 2020 (rice)': '$N_2O_{NL}$-1',
+ 'IPCC 2019 Updated\nMethodology (rice)': '$N_2O_{EF}$-2',
+ 'Eagle et al.,\n 2020 (upland crops)': '$N_2O_{NL}$-1',
+ 'Biomass Altas \n(28 crops)': '$CRB28_{BA}$',
+ 'Karan et al.,\n 2021 \n(28 crops)': '$CRB28_{KH}$',
+ 'Bhatia et al.,\n 2013': '$CH_{4-EF}$'}
+
+
 def x_lab(s):
   return [model_name_dic[x] for x in s]
+
 
 #%%
 national_facet_g = (ggplot(national_summary_df)
@@ -325,7 +358,7 @@ national_facet_g = (ggplot(national_summary_df)
       + facet_grid('units~.', scales='free_y')
    
 )
-national_facet_g.save(path.join(nibs.chart_dir, "national_all_models_all_emissions_facet.svg"), dpi=nibs.dpi)
+national_facet_g.save(path.join(nibs.chart_dir, "national_all_models_all_emissions_facet.png"), dpi=nibs.dpi)
 national_facet_g
 
 
@@ -349,9 +382,8 @@ nat_g = (ggplot(area_national_summary_df)
    
 )
 
-mean_g.save(path.join(nibs.chart_dir, "area_national_all_models_all_emissions.svg"), dpi=nibs.dpi)
-mean_g
-
+nat_g.save(path.join(nibs.chart_dir, "area_national_all_models_all_emissions.png"), dpi=nibs.dpi)
+nat_g
 
 #%%
 national_summary_df
@@ -404,6 +436,6 @@ ch4_g = (ggplot(national_summary_df)
       )
    
 )
-ch4_g.save(path.join(nibs.chart_dir, "national_edf_models_all_emissions.svg"), dpi=nibs.dpi)
+ch4_g.save(path.join(nibs.chart_dir, "national_edf_models_all_emissions.png"), dpi=nibs.dpi)
 ch4_g
 # %%

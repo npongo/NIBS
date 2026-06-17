@@ -1,8 +1,8 @@
   
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -30,7 +30,7 @@ g_kg_ha = nibs.percentile_map(df
                , 'mean_n_balance_n_kg_ha'
                , "All Crops Per Hectare Nitrogen Balance\n(Eagle et al., 2020)"
                , "$Kg\ N\ Ha^{-1}$"
-               , "map_n_balance_all_crops_kg_ha_eagle_2020.svg"
+               , "map_n_balance_all_crops_kg_ha_eagle_2020.png"
                ,legend_position=(.7,.1)
                )
    
@@ -40,7 +40,7 @@ g_total = nibs.percentile_map(df
                , 'total_n_balance_n_Gg_n_map'
                , "All Crops Total Nitrogen Balance\n(Eagle et al., 2020)"
                , "Gg N"
-               , "map_n_balance_all_crops_total_Gg_n_eagle_2020.svg"
+               , "map_n_balance_all_crops_total_Gg_n_eagle_2020.png"
                ,legend_position=(.7,.1)
                )
    
@@ -60,7 +60,7 @@ for crop in crops:
 
 #%%
 for ref, crop, df in dfs:
-    file_name = f"map_{crop}_n_bal_kg_ha_eagle_2020.svg"
+    file_name = f"map_{crop}_n_bal_kg_ha_eagle_2020.png"
     title = f"{crop} Per Hectare Nitrogen Balance\n(Eagle et al., 2020)"
     g_ha = nibs.percentile_map(df
                , 'mean_n_balance_n_kg_ha'
@@ -70,7 +70,7 @@ for ref, crop, df in dfs:
                ,legend_position=(.7,.1))
     g_ha.show()
     
-    file_name = f"map_{crop}_n_bal_total_Gg_n_eagle_2020.svg"
+    file_name = f"map_{crop}_n_bal_total_Gg_n_eagle_2020.png"
     title = f"{crop} Total Nitrogen Balance\n(Eagle et al., 2020)"
     g_t = nibs.percentile_map(df
                , 'total_n_balance_n_Gg_n_map'
@@ -110,7 +110,7 @@ g_ha = nibs.manual_catagorical_map(df
                             , 'Crop with largest Nitrogen Balance\nper Hectare (Eagle et al., 2020)'
                             , 'Crop'
                             , crop_colors
-                            , 'map_max_n_bal_6_class_apy_kg_ha_mean_eagle_2020.svg'
+                            , 'map_max_n_bal_6_class_apy_kg_ha_mean_eagle_2020.png'
                             , legend_position=(.7,.1))
 g_ha.show()
 
@@ -119,7 +119,7 @@ g_t = nibs.manual_catagorical_map(df
                             , 'Crop with largest Total Nitrogen Balance\n(Eagle et al., 2020)'
                             , 'Crop'
                             , crop_colors
-                            , 'map_max_n_bal_6_class_apy_total_mean_eagle_2020.svg'
+                            , 'map_max_n_bal_6_class_apy_total_mean_eagle_2020.png'
                             , legend_position=(.7,.1))
 g_t.show()
 

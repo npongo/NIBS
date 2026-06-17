@@ -1,7 +1,7 @@
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -50,7 +50,7 @@ graphs = list()
 units = "$\\frac{Kg\ CO_2e_{100}} {Kg\ Yield}$"
 for ref, crop, df in dfs:
     df.head()
-    file_name = f"map_{crop}_kg_no2_co2e100_kg_yield_{ref}.svg"
+    file_name = f"map_{crop}_kg_no2_co2e100_kg_yield_{ref}.png"
     title = f"\n{crop} N$_2$O Emissions By Yield\n({(ref[0].upper() + ref.replace('_',' et al. ')[1:]).replace('Ipcc','IPCC')})"
     g = nibs.percentile_map(df
                , 'kg_n2o_kg_yield'
@@ -83,7 +83,7 @@ rename_dict = {
 
 grouped_spearman_corrs = []
 for crop, df in spearman_dfs:
-    file_name = f"n2o_yield_{crop}_spearman_correlation_matrix.svg"
+    file_name = f"n2o_yield_{crop}_spearman_correlation_matrix.png"
     title = f"\n{crop} Spearman Correlation of District Rankings"
 
 
@@ -125,7 +125,7 @@ crop_colors = {
 
 for ref,  df in dfs:
     title = f'Crop with largest $N_2O$ emissions per yield\n({(ref[0].upper() + ref.replace('_',' et al. ')[1:]).replace("Ipcc","IPCC")})'
-    file_name = f"ap_max_n2o_6_class_apy_crop_yield_{ref}.svg"
+    file_name = f"ap_max_n2o_6_class_apy_crop_yield_{ref}.png"
     g_c = nibs.manual_catagorical_map(df
                         , 'max_apy_crop'
                         ,  title
@@ -150,7 +150,7 @@ rename_dict = {
     'apy_crop_shcherbak_2014': 'Shcherbak\net al.,2014',
 }
 ha_cramers_v = nibs.cramers_v_plot(cramer_v_df
-                    , "apy_crop_kg_kg_yield_cramers_v_matrix.svg"
+                    , "apy_crop_kg_kg_yield_cramers_v_matrix.png"
                     , rename_dict
                     , 'District crops with highest yield scaled $N_2O$ emission\n($\\frac{Kg\ N_2O}{Kg\ Yield}$ Cramér\'s V)'
                     , legend_title="Cramér\'s V"

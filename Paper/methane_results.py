@@ -1,7 +1,7 @@
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -19,10 +19,14 @@ print('Python %s on %s' % (sys.version, sys.platform))
 nibs = NIBSData(data_dir=r"b:\Repos\NIBS\Data" , 
                 chart_dir=r"b:\Repos\NIBS\Graphs")
 # %%  national results 
-ch4_sql_national = f"""select * 
-from read_parquet('{path.join(nibs.data_dir,'vwG_national_ch4_summary_all_models.parquet')}')"""
-ch4_df_national = nibs.load_table_data(ch4_sql_national)
-ch4_df_national
+print("Loading national CH4 summary data...")
+try:
+    ch4_sql_national = f"""select * 
+    from read_parquet('{path.join(nibs.data_dir,'vwG_national_ch4_summary_all_models.parquet')}')"""
+    ch4_df_national = nibs.load_table_data(ch4_sql_national)
+    ch4_df_national
+except Exception as e:
+    print("Error loading national CH4 summary data:", e)
 
 #%%
 ch4_sql_bhatia_2013 = f"""
@@ -38,7 +42,7 @@ t_bhatia_2013 = nibs.percentile_map(ch4_df_bhatia_2013
                , 'total_Gg_co2e_map'
                , "Total rice $CH_4$ emissions\n(Bhatia et al., 2013)"
                , "$Gg\ CO_2e_{100}$"
-               , "map_total_ch4_emissions_Gg_bhatia_2013.svg"
+               , "map_total_ch4_emissions_Gg_bhatia_2013.png"
                ,legend_position=(.7,.02)
                )
    
@@ -48,7 +52,7 @@ ha_bhatia_2013 = nibs.percentile_map(ch4_df_bhatia_2013
                , 'kg_ch4_co2e_ha'
                , "Per hectare rice $CH_4$ emissions\n(Bhatia et al., 2013)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_kg_ha_bhatia_2013.svg"
+               , "map_ch4_emissions_kg_ha_bhatia_2013.png"
                ,legend_position=(.7,.02)
                )
    
@@ -58,7 +62,7 @@ min_ha_bhatia_2013 = nibs.percentile_map(ch4_df_bhatia_2013
                , 'min_kg_ch4_co2e_ha'
                , "Minimum per hectare rice $CH_4$ emissions\n(Bhatia et al., 2013)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_min_kg_ha_bhatia_2013.svg"
+               , "map_ch4_emissions_min_kg_ha_bhatia_2013.png"
                ,legend_position=(.7,.02)
                )
    
@@ -68,7 +72,7 @@ max_ha_bhatia_2013 = nibs.percentile_map(ch4_df_bhatia_2013
                , 'max_kg_ch4_co2e_ha'
                , "Maximum per hectare rice $CH_4$ emissions\n(Bhatia et al., 2013)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_max_kg_ha_bhatia_2013.svg"
+               , "map_ch4_emissions_max_kg_ha_bhatia_2013.png"
                ,legend_position=(.7,.02)
                )
    
@@ -87,7 +91,7 @@ t_yan_2005 = nibs.percentile_map(ch4_df_yan_2005
                , 'total_Gg_co2e_map'
                , "Total rice $CH_4$ emissions\n(Yan et al.)"
                , "$Gg\ CO_2e_{100}$"
-               , "map_total_ch4_emissions_Gg_yan_2005.svg"
+               , "map_total_ch4_emissions_Gg_yan_2005.png"
                ,legend_position=(.7,.02)
                )
    
@@ -97,7 +101,7 @@ ha_yan_2005 = nibs.percentile_map(ch4_df_yan_2005
                , 'kg_ch4_co2e_ha'
                , "Per hectare rice $CH_4$ emissions\n(Yan et al., 2005)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_kg_ha_yan_2005.svg"
+               , "map_ch4_emissions_kg_ha_yan_2005.png"
                ,legend_position=(.7,.02)
                )
    
@@ -107,7 +111,7 @@ min_ha_yan_2005 = nibs.percentile_map(ch4_df_yan_2005
                , 'min_kg_ch4_co2e_ha'
                , "Minimum per hectare rice $CH_4$ emissions\n(Yan et al., 2005)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_min_kg_ha_yan_2005.svg"
+               , "map_ch4_emissions_min_kg_ha_yan_2005.png"
                ,legend_position=(.7,.02)
                )
    
@@ -117,7 +121,7 @@ max_ha_yan_2005 = nibs.percentile_map(ch4_df_yan_2005
                , 'max_kg_ch4_co2e_ha'
                , "Maximum per hectare rice $CH_4$ emissions\n(Yan et al., 2005)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_max_kg_ha_yan_2005.svg"
+               , "map_ch4_emissions_max_kg_ha_yan_2005.png"
                ,legend_position=(.7,.02)
                )
    
@@ -137,7 +141,7 @@ t_nikolaisen_2023 = nibs.percentile_map(ch4_df_nikolaisen_2023
                , 'total_Gg_co2e_map'
                , "\nTotal rice $CH_4$ emissions\n(Nikolaisen et al., 2023)"
                , "$Gg\ CO_2e_{100}$"
-               , "map_total_ch4_emissions_Gg_nikolaisen_2023.svg"
+               , "map_total_ch4_emissions_Gg_nikolaisen_2023.png"
                ,legend_position=(.7,.02)
                )
    
@@ -147,7 +151,7 @@ ha_nikolaisen_2023 = nibs.percentile_map(ch4_df_nikolaisen_2023
                , 'kg_ch4_co2e_ha'
                , "Per hectare rice $CH_4$ emissions\n(Nikolaisen et al., 2023)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_kg_ha_nikolaisen_2023.svg"
+               , "map_ch4_emissions_kg_ha_nikolaisen_2023.png"
                ,legend_position=(.7,.02)
                )
    
@@ -157,7 +161,7 @@ min_ha_nikolaisen_2023 = nibs.percentile_map(ch4_df_nikolaisen_2023
                , 'min_kg_ch4_co2e_ha'
                , "Minimum per hectare rice $CH_4$ emissions\n(Nikolaisen et al., 2023)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_min_kg_ha_nikolaisen_2023.svg"
+               , "map_ch4_emissions_min_kg_ha_nikolaisen_2023.png"
                ,legend_position=(.7,.02)
                )
    
@@ -167,7 +171,7 @@ max_ha_nikolaisen_2023 = nibs.percentile_map(ch4_df_nikolaisen_2023
                , 'max_kg_ch4_co2e_ha'
                , "Maximum per hectare rice $CH_4$ emissions\n(Nikolaisen et al., 2023)"
                , "$Kg\ CO_2e_{100}$ $Ha^{-1}$"
-               , "map_ch4_emissions_max_kg_ha_nikolaisen_2023.svg"
+               , "map_ch4_emissions_max_kg_ha_nikolaisen_2023.png"
                ,legend_position=(.7,.02)
                )
    
@@ -183,7 +187,7 @@ gE = t_yan_2005 + labs(title='     E')  + theme( plot_title= element_text(ha='le
 gF = t_nikolaisen_2023 + labs(title='     F')  + theme( plot_title= element_text(ha='left', size=32))
 
 g = (gA| gB| gC)/(gD| gE| gF)  + theme(figure_size=(27,18))
-g.save(path.join(nibs.chart_dir,"map_ch4_emissions_plate.svg"), dpi=300)
+g.save(path.join(nibs.chart_dir,"map_ch4_emissions_plate.png"), dpi=300)
 g
 
 
@@ -213,7 +217,7 @@ g_dist_max_t_farm_size_bhatia = nibs.catagorical_map(dist_max_farm_size_df_bhati
                     , 'max_t_ch4_farm_size'
                     , '\nRice, landholding size with\nlargest total $CH_4$emissions\n(Bhatia et al., 2013)'
                     , 'Landholding\nSize\n'
-                    , 'map_district_farm_size_max_t_bhatia_2013.svg'
+                    , 'map_district_farm_size_max_t_bhatia_2013.png'
                     , legend_position=(.7,.02))
 g_dist_max_t_farm_size_bhatia
 
@@ -222,7 +226,7 @@ g_dist_max_ha_farm_size_bhatia = nibs.catagorical_map(dist_max_farm_size_df_bhat
                     , 'max_kg_ch4_ha_farm_size'
                     , '\nRice, landholding size\nwith largest $CH_4$ emissions perhectare\n(Bhatia et al., 2013)'
                     , 'Landholding\nSize\n'
-                    , 'map_district_farm_size_max_ha_bhatia_2013.svg'
+                    , 'map_district_farm_size_max_ha_bhatia_2013.png'
                     , legend_position=(.7,.02))
 g_dist_max_ha_farm_size_bhatia
 
@@ -239,7 +243,7 @@ g_dist_max_t_farm_size_nikolaisen = nibs.catagorical_map(dist_max_farm_size_df_n
                     , 'max_t_ch4_farm_size'
                     , '\nRice, landholding size with\nlargest total $CH_4$emissions\n(Nikolaisen et al., 2023)'
                     , 'Landholding\nSize\n'
-                    , 'map_district_farm_size_max_t_nikolaisen_2023.svg'
+                    , 'map_district_farm_size_max_t_nikolaisen_2023.png'
                     , legend_position=(.7,.02))
 g_dist_max_t_farm_size_nikolaisen
 
@@ -248,7 +252,7 @@ g_dist_max_ha_farm_size_nikolaisen = nibs.catagorical_map(dist_max_farm_size_df_
                     , 'max_kg_ch4_ha_farm_size'
                     , '\nRice, landholding size\nwith largest $CH_4$ emissions perhectare\n(Nikolaisen et al., 2023)'
                     , 'Landholding\nSize\n'
-                    , 'map_district_farm_size_max_ha_nikolaisen_2023.svg'
+                    , 'map_district_farm_size_max_ha_nikolaisen_2023.png'
                     , legend_position=(.7,.02))
 g_dist_max_ha_farm_size_nikolaisen
 
@@ -265,7 +269,7 @@ g_dist_max_t_farm_size_yan = nibs.catagorical_map(dist_max_farm_size_df_yan
                     , 'max_t_ch4_farm_size'
                     , '\nRice, landholding size with\nlargest total $CH_4$emissions\n(Yan et al., 2005)'
                     , 'Landholding\nSize\n'
-                    , 'map_district_farm_size_max_t_yan_2005.svg'
+                    , 'map_district_farm_size_max_t_yan_2005.png'
                     , legend_position=(.7,.02))
 g_dist_max_t_farm_size_yan
 
@@ -274,7 +278,7 @@ g_dist_max_ha_farm_size_yan = nibs.catagorical_map(dist_max_farm_size_df_yan
                     , 'max_kg_ch4_ha_farm_size'
                     , '\nRice, landholding size\nwith largest $CH_4$ emissions perhectare\n(Yan et al., 2005)'
                     , 'Landholding\nSize\n'
-                    , 'map_district_farm_size_max_ha_yan_2005.svg'
+                    , 'map_district_farm_size_max_ha_yan_2005.png'
                     , legend_position=(.7,.02))
 g_dist_max_ha_farm_size_yan
 
@@ -288,7 +292,7 @@ gE = g_dist_max_t_farm_size_yan + labs(title='     E')  + theme( plot_title= ele
 gF = g_dist_max_t_farm_size_nikolaisen + labs(title='     F')  + theme( plot_title= element_text(ha='left', size=32))
 
 g = (gA| gB| gC)/(gD| gE| gF)+ theme(figure_size=(24,16))
-g.save(path.join(nibs.chart_dir,"map_district_ch4_farm_size_max_plate.svg"), dpi=300)
+g.save(path.join(nibs.chart_dir,"map_district_ch4_farm_size_max_plate.png"), dpi=300)
 g
 
 
@@ -306,7 +310,7 @@ ch4_ha_rename_dict = {
 }
 
 ch4_ha_spearman_corr_plot = nibs.avg_spearman_plot(spearman_df
-              , 'ch4_farm_size_average_spearman_correlation.svg'
+              , 'ch4_farm_size_average_spearman_correlation.png'
               , ch4_ha_rename_dict
               , 'District Average $CH_4$ Comparison\n(Spearman Correlation $Kg\ CO_2e_{100}\ Ha^{-1}$)'
               , 12
@@ -315,6 +319,7 @@ ch4_ha_spearman_corr_plot = nibs.avg_spearman_plot(spearman_df
               )
 
 ch4_ha_spearman_corr_plot.show()
+
 
 
 # %%
@@ -330,9 +335,9 @@ rename_kg_dict = {
 }
 
 ha_cramers_v = nibs.cramers_v_plot(cramer_v_df
-                    , "farm_size_kg_ha_ch4_cramerfarm_size_kg_ha_ch4_cramers_s_v_matrix.svg"
+                    , "farm_size_kg_ha_ch4_cramerfarm_size_kg_ha_ch4_cramers_s_v_matrix.png"
                     , rename_kg_dict
-                    , 'District farm size with highest methane emission\n($Kg\ Ch_4\ Ha^{-1}$ Cramér\'s V)'
+                    , 'District farm size with\nhighest methane emission\n($Kg\ Ch_4\ Ha^{-1}$ Cramér\'s V)'
                     , legend_title="Cramér\'s V"
                     ,figure_size=(7,6)
                     )
@@ -347,13 +352,21 @@ rename_t_dict = {
 }
 
 t_cramers_v = nibs.cramers_v_plot(cramer_v_df
-                    , "farm_size_t_ch4_cramers_v_matrix.svg"
+                    , "farm_size_t_ch4_cramers_v_matrix.png"
                     , rename_t_dict
-                    , 'District farm size with highest methane emission\n ($Total\ Gg\ Ch_4$ Cramér\'s V)'
+                    , 'District farm size with\nhighest methane emission\n ($Total\ Gg\ Ch_4$ Cramér\'s V)'
                     , legend_title="Cramér\'s V"
                     ,figure_size=(7,6)
                     )
 t_cramers_v.show()
+
+# %%
+ha_plot = ha_cramers_v + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))
+t_plot = t_cramers_v + labs(title='\nB')  + theme( plot_title= element_text(ha='left', size=22))  
+cramers_v_plate = ha_plot | t_plot  
+cramers_v_plate = cramers_v_plate + theme(figure_size=(14,6))
+cramers_v_plate.save(path.join(nibs.chart_dir,"district_ch4_cramers_v_plate.png"), dpi=300)
+cramers_v_plate
 
 
 # %%
@@ -372,7 +385,7 @@ rename_mean_kg_dict = {
 
 
 ch4_ha_spearman_corr_plot = nibs.spearman_plot(ha_corr_df
-              , 'district_rice_kg_ch4_ha_spearman_matrix.svg'
+              , 'district_rice_kg_ch4_ha_spearman_matrix.png'
               , rename_mean_kg_dict
               , 'District Model Comparison\n(Spearman Correlation $Kg\ CH_4\ Ha^{-1}$)'
               , 12
@@ -391,12 +404,20 @@ rename_total_t_dict = {
 
 
 ch4_t_spearman_corr_plot = nibs.spearman_plot(ha_corr_df
-              , 'district_rice_ch4_Gg_spearman_matrix.svg'
+              , 'district_rice_ch4_Gg_spearman_matrix.png'
               , rename_total_t_dict
-              , 'District Model Comparison\n(Spearman Correlation $Total\ District\ CH_4$)'
+              , 'District Model Comparison\n(Spearman Correlation\n$Total\ District\ CH_4$)'
               , 12
               , 'white'
               ,figure_size=(7,6)
               )
 
 ch4_t_spearman_corr_plot.show()
+# %%
+ha_plot = ch4_ha_spearman_corr_plot + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))
+t_plot = ch4_t_spearman_corr_plot + labs(title='\nB')  + theme( plot_title= element_text(ha='left', size=22))  
+ch4_matrix_plate = ha_plot | t_plot
+ch4_matrix_plate = ch4_matrix_plate + theme(figure_size=(14,6))
+ch4_matrix_plate.save(path.join(nibs.chart_dir,"district_ch4_spearman_correlation_plate.png"), dpi=300)
+ch4_matrix_plate
+# %%

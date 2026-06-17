@@ -1,6 +1,6 @@
 #%%
-%reload_ext autoreload
-%autoreload 2
+# %reload_ext autoreload
+# %autoreload 2
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
@@ -33,7 +33,7 @@ biomass_Gg_g = nibs.percentile_map(residue_burning_df
                , 'total_Gg_co2e_map'
                , "Total residue burning\nemissions (Biomass Atlas 2.0v)"
                , "$Gg\ CO_2e_{100}$\n"
-               , "map_total_residue_burning_emissions_Gg.svg"
+               , "map_total_residue_burning_emissions_Gg.png"
                ,legend_position=(.7,.02)
                )
    
@@ -45,7 +45,7 @@ biomass_ha_g = nibs.percentile_map(residue_burning_df
                , 'kg_co2e_ha'
                , "Per hectare residue burning\nemissions (Biomass Atlas 2.0v)"
                , "$Kg\ CO_2e_{100}\ Ha^{-1}$\n"
-               , "map_residue_burning_emissions_kg_ha_biomass_altas_v2.svg"
+               , "map_residue_burning_emissions_kg_ha_biomass_altas_v2.png"
                ,legend_position=(.7,.02)
                )
    
@@ -65,7 +65,7 @@ karan_Gg_g = nibs.percentile_map(residue_burning_karan_df
                , 'total_Gg_co2e_map'
                , "Total residue burning\nemissions (Karan et al. 2021)"
                , "$Gg\ CO_2e_{100}$\n"
-               , "map_total_residue_burning_karan_emissions_Gg.svg"
+               , "map_total_residue_burning_karan_emissions_Gg.png"
                ,legend_position=(.7,.02)
                )
    
@@ -76,7 +76,7 @@ karan_ha_g = nibs.percentile_map(residue_burning_karan_df
                , 'kg_co2e_ha'
                , "Per hectare residue burning\nemissions(Karan et al. 2021)"
                , "$Kg\ CO_2e_{100}\ Ha^{-1}$\n"
-               , "map_residue_burning_karan_emissions_kg_ha.svg"
+               , "map_residue_burning_karan_emissions_kg_ha.png"
                ,legend_position=(.7,.02)
                )
    
@@ -90,7 +90,7 @@ gC = biomass_Gg_g + labs(title='     C')  + theme( plot_title= element_text(ha='
 gD = karan_Gg_g + labs(title='     D')  + theme( plot_title= element_text(ha='left', size=32))
 
 g = (gA| gB)/(gC| gD) + theme(figure_size=(18,18))
-g.save(path.join(nibs.chart_dir,"map_district_residue_burning_plate.svg"), dpi=300)
+g.save(path.join(nibs.chart_dir,"map_district_residue_burning_plate.png"), dpi=300)
 g
 
 
@@ -109,7 +109,7 @@ burning_ha_rename_dict = {'kg_co2e_ha__biomass_altas_v2_44': 'Biomass Altas v2.0
         }
 
 burning_ha_spearman_corr_plot = nibs.spearman_plot(ha_corr_df
-              , 'district_rice_crop_kg_n2o_co2e_ha_spearman_matrix.svg'
+              , 'district_rice_crop_kg_n2o_co2e_ha_spearman_matrix.png'
               , burning_ha_rename_dict
               , 'District Residue Burning Model Comparison\n(Spearman Correlation $Kg\ CO_2e_{100}\ Ha^{-1}$)'
               , 12
@@ -126,7 +126,7 @@ burning_Gg_rename_dict = {'total_Gg_co2e__biomass_altas_v2_44': 'Biomass Altas v
         }
 
 burning_Gg_spearman_corr_plot = nibs.spearman_plot(ha_corr_df
-              , 'district_residue_burning_co2e_Gg_spearman_heatmap.svg'
+              , 'district_residue_burning_co2e_Gg_spearman_heatmap.png'
               , burning_Gg_rename_dict
               , 'District Residue Burning Model Comparison\n(Spearman Correlation $Total\ District\ CO_2e_{100}$)'
               , 12
@@ -135,3 +135,13 @@ burning_Gg_spearman_corr_plot = nibs.spearman_plot(ha_corr_df
               )
 
 burning_Gg_spearman_corr_plot.show()
+
+# %%
+plot_a = burning_ha_spearman_corr_plot + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))
+plot_b = burning_Gg_spearman_corr_plot + labs(title='\nB')  + theme( plot_title= element_text(ha='left', size=22))  
+burning_matrix_plate = plot_a | plot_b                  
+burning_matrix_plate = burning_matrix_plate + theme(figure_size=(14,6))
+burning_matrix_plate.save(path.join(nibs.chart_dir,"district_residue_burning_spearman_correlation_plate.png"), dpi=300) 
+burning_matrix_plate
+
+# %%

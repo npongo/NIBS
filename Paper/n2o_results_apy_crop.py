@@ -1,8 +1,8 @@
 
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -51,7 +51,7 @@ crop_colors = {
 crops_graphs = {}
 for (ref, df) in dfs:
     title = f'Crop with largest \ntotal $N_2O$ emissions\n({refs[ref]})'
-    file_name = f"map_district_n2o_apy_crop_max_t_{ref}.svg"
+    file_name = f"map_district_n2o_apy_crop_max_t_{ref}.png"
     g_t = nibs.manual_catagorical_map(df
                         , 'max_fert_induced_Tg_n2o_n_apy_crop'
                         ,  title
@@ -63,7 +63,7 @@ for (ref, df) in dfs:
     g_t.show()
 
     title = f'Crop with largest $N_2O$\nemissions per hectare\n({refs[ref]})'
-    file_name = f"map_district_n2o_apy_crop_max_ha_{ref}.svg"
+    file_name = f"map_district_n2o_apy_crop_max_ha_{ref}.png"
     g_ha = nibs.manual_catagorical_map(df
                         , 'max_fert_induced_kg_n2o_n_ha_apy_crop'
                         ,  title
@@ -94,7 +94,7 @@ gH = crops_graphs['shcherbak_2014'][0] + labs(title='     H') + theme( plot_titl
 
 #%%
 g = (gA| gB| gC| gD)/(gE| gF| gG| gH) + theme(figure_size=(32, 16))
-g.save(path.join(nibs.chart_dir,"map_district_n2o_apy_crop_max_plate.svg"), dpi=nibs.dpi)
+g.save(path.join(nibs.chart_dir,"map_district_n2o_apy_crop_max_plate.png"), dpi=nibs.dpi)
 g
 
 
@@ -120,7 +120,7 @@ cramer_v_df = nibs.load_map_data(cramer_v_sql)
 #%%
 
 crop_ha_cramer_v = nibs.cramers_v_plot(cramer_v_df
-                    , "apy_crop_kg_ha_cramers_v_matrix.svg"
+                    , "apy_crop_kg_ha_cramers_v_matrix.png"
                     , rename_ha_dict
                     , 'District crops with\nhighest $N_2O$ emission\n($Kg\ N_2O\ Ha^{-1}$ Cramér\'s V)'
                     , figure_size=(7,6)
@@ -129,11 +129,20 @@ crop_ha_cramer_v = nibs.cramers_v_plot(cramer_v_df
 crop_ha_cramer_v.show()
 
 crop_t_cramer_v = nibs.cramers_v_plot(cramer_v_df
-                    , "apy_crop_t_n2o_cramers_v_matrix.svg"
+                    , "apy_crop_t_n2o_cramers_v_matrix.png"
                     , rename_total_dict
                     , 'District crops with\nhighest $N_2O$ emission\n ($Total\ Gg\ N_2O$ Cramér\'s V)'
                     , figure_size=(7,6)
                     , legend_title="Cramér\'s V"
                     )
-crop_t_cramer_v.show()                                                               
+crop_t_cramer_v.show()  
+
+                                                             
 # %%
+
+plot_a = crop_ha_cramer_v + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))
+plot_b = crop_t_cramer_v + labs(title='\nB')  + theme( plot_title= element_text(ha='left', size=22))  
+crop_matrix_plate = plot_a | plot_b 
+crop_matrix_plate = crop_matrix_plate + theme(figure_size=(14,6))
+crop_matrix_plate.save(path.join(nibs.chart_dir,"district_n2o_apy_crop_cramers_v_plate.png"), dpi=300)
+crop_matrix_plate

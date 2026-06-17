@@ -1,8 +1,8 @@
 
 #%%
-%reload_ext autoreload
-%autoreload 2
-%matplotlib inline
+# %reload_ext autoreload
+# %autoreload 2
+# %matplotlib inline
 
 import sys
 sys.path.extend(["..\\"])
@@ -38,7 +38,7 @@ for ref in refs.keys():
 #%%
 farm_size_graphs = {}
 for ref, df in dfs: 
-    file_name = f'map_district_n2o_farm_size_max_t_{ref}.svg'
+    file_name = f'map_district_n2o_farm_size_max_t_{ref}.png'
     title = f'All crops, Landholding size with\nlargest total $N_2O$ emissions\n({refs[ref]})'
     g_max_t = nibs.catagorical_map(df, 'max_fert_induced_Tg_n2o_n_farm_size'
                         , title
@@ -46,12 +46,12 @@ for ref, df in dfs:
                         , file_name
                         , legend_position=(.7,.02))
 
-    file_name = f'map_district_n2o_farm_size_max_kg_ha_{ref}.svg'
+    file_name = f'map_district_n2o_farm_size_max_kg_ha_{ref}.png'
     title = f'All crops, Landholding size\nwith largest $N_2O$ emissions per hectare\n({refs[ref]})'
     g_max_ha = nibs.catagorical_map(df, 'max_fert_induced_kg_n2o_n_ha_farm_size'
                         ,'All crops, Landholding size\nwith largest $N_2O$ emissions per hectare\n(IPCC 2019 Updated Methodology)'
                         , 'Landholding\nSize\n'
-                        , 'map_district_n2o_farm_size_max_t_ipcc_2019.svg'
+                        , 'map_district_n2o_farm_size_max_t_ipcc_2019.png'
                         , legend_position=(.7,.02))
 
     farm_size_graphs[ref] = (g_max_t, g_max_ha)
@@ -88,7 +88,7 @@ gH = (farm_size_graphs['shcherbak_2014'][0] + labs(title='     H')
                         
 
 g = (gA| gB|gC| gD)/(gE| gF| gG| gH)  + theme(figure_size=(32, 16))
-g.save(path.join(nibs.chart_dir,"map_district_n2o_apy_crop_max_plate.svg"), dpi=nibs.dpi)
+g.save(path.join(nibs.chart_dir,"map_district_n2o_apy_crop_max_plate.png"), dpi=nibs.dpi)
 g
 
 # %%
@@ -104,7 +104,7 @@ rename_ha_dict = {
     'max_total_kg_n2o_n_ha_farm_size_ipcc_2019': 'IPCC 2019\nUpdated\nMethodology\n\n',
     'max_total_kg_n2o_n_ha_farm_size_shcherbak_2014': 'Shcherbak\net al.,2014\n',
 }
-farm_size_ha_cramers_v = nibs.cramers_v_plot(cramer_v_df, "farm_size_kg_ha_cramers_v_matrix.svg"
+farm_size_ha_cramers_v = nibs.cramers_v_plot(cramer_v_df, "farm_size_kg_ha_cramers_v_matrix.png"
                     , rename_ha_dict
                     , 'District farm size with\nhighest $N_2O$ emission\n($Kg\ N_2O\ Ha^{-1}$ Cramér\'s V)'
                     , legend_title="Cramér\'s V"
@@ -119,13 +119,22 @@ rename_total_dict = {
     'max_total_Tg_n2o_n_farm_size_shcherbak_2014': 'Shcherbak\net al.,2014\n'
 }
 
-farm_size_t_cramers_v = nibs.cramers_v_plot(cramer_v_df, "farm_size_t_n2o_cramers_v_matrix.svg"
+farm_size_t_cramers_v = nibs.cramers_v_plot(cramer_v_df, "farm_size_t_n2o_cramers_v_matrix.png"
                     , rename_total_dict
                     , 'District farm size with\nhighest $N_2O$ emission\n ($Total\ Gg\ N_2O$ Cramér\'s V)'
                     , legend_title="Cramér\'s V"
                     ,figure_size=(7,6)
                     )
 farm_size_t_cramers_v.show()
+
+
+# %%
+plot_a = farm_size_ha_cramers_v + labs(title='\nA')  + theme( plot_title= element_text(ha='left', size=22))
+plot_b = farm_size_t_cramers_v + labs(title='\nB')  +                   theme( plot_title= element_text(ha='left', size=22))    
+farm_size_matrix_plate = plot_a | plot_b
+farm_size_matrix_plate = farm_size_matrix_plate + theme(figure_size=(14,6))
+farm_size_matrix_plate.save(path.join(nibs.chart_dir,"district_n2o_farm_size_cramers_v_plate.png"), dpi=300)
+farm_size_matrix_plate
 
 # %%
 
@@ -155,7 +164,7 @@ fert_type_by_farm_size_g = (ggplot(fert_farm_size_df)
         )
     )
 fert_type_by_farm_size_g.show()
-fert_type_by_farm_size_g.save(path.join(nibs.chart_dir, " fert_type_by_farm_size.svg"), dpi=nibs.dpi)
+fert_type_by_farm_size_g.save(path.join(nibs.chart_dir, " fert_type_by_farm_size.png"), dpi=nibs.dpi)
 
 
 # %
@@ -185,7 +194,7 @@ rice_fert_type_by_farm_size_g = (ggplot(fert_farm_size_df)
         )
     )
 rice_fert_type_by_farm_size_g.show()
-rice_fert_type_by_farm_size_g.save(path.join(nibs.chart_dir, "rice_fert_type_by_farm_size.svg"), dpi=nibs.dpi)
+rice_fert_type_by_farm_size_g.save(path.join(nibs.chart_dir, "rice_fert_type_by_farm_size.png"), dpi=nibs.dpi)
 
 # %%
 fert_farm_size_sql = f"""select *
@@ -213,5 +222,5 @@ none_rice_crop_fert_type_by_farm_size_g = (ggplot(fert_farm_size_df)
         )
     )
 none_rice_crop_fert_type_by_farm_size_g.show()
-none_rice_crop_fert_type_by_farm_size_g.save(path.join(nibs.chart_dir, "none_rice_crop_fert_type_by_farm_size.svg"), dpi=nibs.dpi)
+none_rice_crop_fert_type_by_farm_size_g.save(path.join(nibs.chart_dir, "none_rice_crop_fert_type_by_farm_size.png"), dpi=nibs.dpi)
 
