@@ -12,7 +12,7 @@ wheels/
 #folders to ignore
 Data/ 
 .vs/
-
+Examples/rice_wheate_photo_pri.py
 
 
 

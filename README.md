@@ -1,33 +1,26 @@
 # Potential for reducing greenhouse gas emissions from cropland in India: where, Which(crop), and Who(farmers) 
 
-<<<<<<< HEAD
-This respository stores code files used to generate the graphs for the paper along with example notebooks for how to access and use the raw data and documentation. The raw data is stored in a duckdb database and is ~178Gib in size. Due to the size it is hosted on dropbox and can be downloaded by https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&st=lawcyar0&dl=1. The tables and views in the database have been exported to parquet files so they can be directly accessed from the web. Links to each table/view parquet file are in the excel spreadsheet that documents all the database tables and views located in the documents file. 
-=======
-This respository stores code files used to generate the graphs for the paper along with example notebooks for how to access and use the raw data and documentation. The raw data is stored in a duckdb database and is ~178Gib in size. Due to the size it is hosted on dropbox and can be downloaded by https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&dl=1. The tables and views in the database have been exported to parquet files so they can be directly accessed from the web. Links to each table/view parquet file are in the excel spreadsheet that documents all the database tables and views located in the documents file. 
->>>>>>> 13788b71c9931f473e4005de48f505bdb782c0e3
+This respository stores code files used to generate the graphs for the paper along with example notebooks for how to access and use the raw data and documentation. The raw data is stored in a duckdb database and is ~178Gib in size. Due to the size it is hosted on dropbox and can be downloaded **[here]( https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&st=lawcyar0&dl=1)**. The tables and views in the database have been exported to parquet files so they can be directly accessed from the web. Links to each table/view parquet file are in the excel spreadsheet that documents all the database tables and views located in the documents file. 
 
-
-##Examples Folder
+## Examples Folder
 The examples folder contains jupitor notebooks that showcase how to use the data to identify potenial district for GHG emission reduction. 
 
-##Paper Folder
+## Paper Folder
 The paper folder contains the code files used to generate the graphs for the published paper. 
 
-##Documentation Folder
+## Documentation Folder
 The documentation folder contain the documentation for the database and document with detailed descriptions of the methods.
 
-##Accessing the raw data 
+## Accessing the raw data 
+The raw data is stored in a number of parquet files that are publicly available using the URLs that can be located in the **[database documentation excel](Documentation/database%20documentation.xlsx)** file located in the Documents directory of this repository. The parquet files can be opended in excel use the method presented **[here](https://medium.com/@simon.peter.mueller/excel-parquet-integration-mastering-data-analysis-with-duckdb-6a6a6b773128)**. See the examples below to use DuckDB in python or R to access the raw files for analysis. Under the **[Shared folder](Shared/)** there are helper classes to make accessing and analysing the data easier with python. Also in the Examples directory there are tutorial jupitor notebooks that demonstatred using the data to identify target districts for emissions reductions. 
+
 Retrieve data for district nitrogen balance. 
 For more examples code look in the examples fold.
 ### Python
 ```python
 import duckdb 
 
-<<<<<<< HEAD
 with duckdb.connect("https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&st=lawcyar0&raw=1",readonly=True) as conn:
-=======
-with duckdb.connect("https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&raw=1",readonly=True) as conn:
->>>>>>> 13788b71c9931f473e4005de48f505bdb782c0e3
     sql = ""
     df = con.execute(sql).to_df()
     con.close
@@ -51,5 +44,7 @@ dbExecute(con, "INSERT INTO items VALUES (1, 'Apple', 0.99), (2, 'Banana', 0.59)
 result <- dbGetQuery(con, "SELECT * FROM items")
 print(result)
 ```
+
+
 ## Website License
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

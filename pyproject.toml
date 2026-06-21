@@ -4,4 +4,20 @@ version = "0.1.0"
 description = "python environment required to access the data for the NIBS project"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ['matplotlib>=3.10','chardet','numpy>=2.2','ipykernel','scipy','polars','pyarrow','pandas','requests', 'geopandas','plotnine>=0.15.0','duckdb','pillow']
+dependencies = [
+    'matplotlib>=3.10',
+    'chardet',
+    'numpy>=2.2',
+    "ipykernel",
+    'scipy',
+    'polars',
+    'pyarrow',
+    'pandas',
+    'requests',
+    'geopandas',
+    'plotnine>=0.15.0',
+    'duckdb',
+    'pillow',
+    "seaborn>=0.13.2",
+    "docx>=0.2.4",
+]
