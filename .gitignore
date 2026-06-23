@@ -11,6 +11,7 @@ wheels/
 
 #folders to ignore
 Data/ 
+*.svg
 .vs/
 Examples/rice_wheate_photo_pri.py
 
