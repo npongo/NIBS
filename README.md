@@ -1,12 +1,12 @@
 # Potential for reducing greenhouse gas emissions from cropland in India: where, Which(crop), and Who(farmers) 
 
-This respository stores code files used to generate the graphs for the paper along with example notebooks for how to access and use the raw data and documentation. The raw data is stored in a duckdb database and is ~178Gib in size. Due to the size it is hosted on dropbox and can be downloaded **[here]( https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&st=lawcyar0&dl=1)**. The tables and views in the database have been exported to parquet files so they can be directly accessed from the web. Links to each table/view parquet file are in the excel spreadsheet that documents all the database tables and views located in the documents file. 
+This respository stores code files used to generate the graphs for the **[paper](https://iopscience.iop.org/article/10.1088/1748-9326/ae499c)** along with example notebooks for how to access and use the raw data and documentation. The raw data is stored in a duckdb database and is ~178Gib in size. Due to the size it is hosted on dropbox and can be downloaded **[here]( https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&st=lawcyar0&dl=1)**. The tables and views in the database have been exported to parquet files so they can be directly accessed from the web. Links to each table/view parquet file are in the excel spreadsheet that documents all the database tables and views located in the documents file. 
 
 ## Examples Folder
 The examples folder contains jupitor notebooks that showcase how to use the data to identify potenial district for GHG emission reduction. 
 
 ## Paper Folder
-The paper folder contains the code files used to generate the graphs for the published paper. 
+The paper folder contains the code files used to generate the graphs for the published **[paper](https://iopscience.iop.org/article/10.1088/1748-9326/ae499c)**. 
 
 ## Documentation Folder
 The documentation folder contain the documentation for the database and document with detailed descriptions of the methods.
