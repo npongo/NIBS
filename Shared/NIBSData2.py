@@ -129,7 +129,7 @@ class NIBSData():
     def load_dataset(self, dataset:str, crs:str="EPSG:4326",geom_column:str='geog')->pd.DataFrame:
         """
         load an sql table into a dataframe
-        :param sql: sql query to execute
+        :param dataset: name of the dataset to load
         :return: dataframe
         """
         sql = f"select * from read_parquet('{path.join(self._data_dir,f"{dataset}.parquet")}')"

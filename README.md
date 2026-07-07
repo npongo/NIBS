@@ -16,32 +16,54 @@ The raw data is stored in a number of parquet files that are publicly available 
 
 Retrieve data for district nitrogen balance. 
 For more examples code look in the examples fold.
-### Python
+### Python: Example loading a spatial parquet data file.
 ```python
 import duckdb 
 
-with duckdb.connect("https://www.dropbox.com/scl/fi/smggq1ewhi07h0jzu5spq/india_agriculture_census_ghg_results_v2.duckdb?rlkey=ipch2mku8rtb0x1vo08xqdr9y&st=lawcyar0&raw=1",readonly=True) as conn:
-    sql = ""
-    df = con.execute(sql).to_df()
-    con.close
+crs = "EPSG:4326"
+table_path = "<local path to table_name.parquet>"  # use the excel sheet in the documentation fold to download the required .parquet file then supply its local path here.
+with duckdb.connect(database=":memory:") as con:
+    con.execute("install spatial")
+    con.execute("load spatial")
+    # load a spatial dataset
+    df = con.execute(f"""
+                     SELECT exclude geog *
+                     ,  cast(geog as string) as geog_str  
+                     FROM read_parquet({table_path})
+                     """).fetch_df()
+    gdf = gpd.GeoDataFrame(df,geometry= gpd.GeoSeries.from_wkt(df[geom_column]),crs=crs)
 
-df.head(5)
+gdf.head()
 
 ```
+
+### Python: Example using the helper class to manage local cacheing and dataset loading
+```python
+#clone the respository 
+import duckdb 
+from Shared import NIBSData2
+nibs = NIBSData2.NIBSData()  # defualt initiliztion will create folders within the working directory to cache parquet files locally after first use.
+
+try:
+    sql = f"""select * 
+    from read_parquet('{path.join(nibs.data_dir,'vwG_national_ch4_summary_all_models.parquet')}')"""  #allows for customization of sql with where clauses. 
+    df = nibs.query_dataset(sql) # take sql statement to allow for where clauses. Use nibs.load_dataset to load a dataset by name only.
+except Exception as e:
+    print("Error loading national CH4 summary data:", e)
+
+df.head()
+```
     
-### R
+### R: Example loading a table dataset
 ```r
 library(duckdb)
 
 # Create a connection to an in-memory DuckDB database
 con <- dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 
-# Create a table and insert some data
-dbExecute(con, "CREATE TABLE items (id INTEGER, name STRING, price DOUBLE)")
-dbExecute(con, "INSERT INTO items VALUES (1, 'Apple', 0.99), (2, 'Banana', 0.59), (3, 'Cherry', 2.99)")
 
 # Query the table
-result <- dbGetQuery(con, "SELECT * FROM items")
+result <- dbGetQuery(con, "SELECT * FROM read_parquet(<path to parquet file>)")
 print(result)
 ```
 
