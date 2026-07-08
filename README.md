@@ -107,7 +107,7 @@ print(result)
 ```
 
 ## AI Integration
-The **[Skill folder](./Skills/)** contains a **[Claude skill](./Skills/claude_india-crop-ghg.skill)** that can be installing into Claude to make the data "chattable" with Claude. Their is also a **[ChatGPT implementation](./Skills/india-crop-ghg-chatgpt.zip)**, unzip it and follow the setup_guide.md for installing it. The **[Copilot Cowork skill](./Skills/)** can be used as well to help automate and simplify getting answers from the data. The repository has a built-in GitHub Copilot skill. 
+The **[Skill folder](./Skills/)** contains a **[Claude skill](./Skills/claude_india-crop-ghg.skill)** that can be installing into Claude to make the data "chattable" with Claude. Their is also a **[ChatGPT implementation](./Skills/india-crop-ghg-chatgpt.zip)**, unzip it and follow the setup_guide.md for installing it. The **[Copilot Cowork skill](./Skills/india-crop-ghg-cowork.zip)** can be used as well to help automate and simplify getting answers from the data. The repository has a built-in GitHub Copilot skill. 
 This is experiemental and should be used with caution and knownledge of the datasets that Claude queries. 
 
 ## Website License
