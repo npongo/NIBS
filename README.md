@@ -106,6 +106,8 @@ result <- dbGetQuery(con, "SELECT * FROM read_parquet(<path to parquet file>)")
 print(result)
 ```
 
+## AI Integration
+The **[Skill folder](./Skills/)** contains a **[Claude skill](./Skills/claude_india-crop-ghg.skill)** that can be installing into Claude to make the data "chattable" with Claude. This is experiemental and should be used with caution and knownledge of the datasets that Claude queries. 
 
 ## Website License
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
